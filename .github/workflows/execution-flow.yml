@@ -33,12 +33,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Test code
+        # 각 Step은 식별하기 위한 id 필드를 가질 수 있습니다.
+        # Step의 성공 or 실패 여부를 판단하기 위한 id를 작성합니다.
+        id: run-tests
         run: npm run test
-      # 테스트가 실패했을 때만, 해당 테스트 report를 업로드하고 싶을 수 있습니다.
-      # 테스트가 통과하면, 아래 Step을 실행하고 싶지 않을 수 있습니다.
-      # GitHub Actions의 기본 동작은 하나의 Step만 실패해도
-      # needs 필드를 통해 의존되는 전체 Job이 실패하여 중지됩니다.
       - name: Upload test report
+        # 동일한 Job 내의 Step들을 참조하기 위해서 steps 컨텍스트를 활용합니다.
+        # steps.run-tests.outcome은 컨텍스트 값이기 때문에 작은 따옴표를 사용하지 않습니다.
+        # ==은 GitHub Actions가 제공하는 동등비교 연산자로, 좌항과 우항을 비교하여 boolean 값을 반환합니다.
+        # if 필드의 결과 값은 'success', 'failure', 'cancelled', 'skipped' 문자열과 비교할 수 있습니다.
+        if: steps.run-tests.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: test-report
