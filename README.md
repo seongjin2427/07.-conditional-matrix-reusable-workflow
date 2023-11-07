@@ -8,7 +8,7 @@
 
 <br>
 
-## First Case
+## Control conditional Workflows
 
 `if`
 > `test` 통과 ➡️ 테스트 레포트 출력 X
@@ -62,3 +62,12 @@
 - Result
   - `test` Job의 테스트가 실패해도 테스트 레포트를 출력하는 Step `Upload test report`는 정상적으로 작동됩니다.
   - 이후의 `build`, `deploy` Job은 이어서 진행되지 않습니다.
+
+<br>
+
+4. Job 레벨에서도 `if` 필드를 활용할 수 있습니다. - 
+
+- Proceess
+  - `execution-flow.yml` 파일의 마지막에 `report` Job을 추가합니다.
+  - `Output information` Step을 작성하고, `if` 필드로 `failure()` 상태함수를 추가합니다.
+    - `if: failure()`

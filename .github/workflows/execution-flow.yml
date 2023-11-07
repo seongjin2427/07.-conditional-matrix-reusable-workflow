@@ -36,7 +36,6 @@ jobs:
         id: run-tests
         run: npm run test
       - name: Upload test report
-        # GitHub Actions가 제공하는 특별한 함수 'failure()'와 함께 조건을 작성해야 합니다.
         if: failure() && steps.run-tests.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
@@ -76,3 +75,12 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  report:
+    # 이전의 Job들 중 하나라도 실패했을 때만 report Job이 실행됩니다.
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run: |
+          echo "Something when wrong"
+          echo "${{ github }}"
