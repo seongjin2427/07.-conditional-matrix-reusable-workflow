@@ -45,7 +45,7 @@
 
 <br>
 
-3. `if` 필드의 조건에 상태 검사 함수 `failure()`를 `&&`연산자와 함께 작성해야 합니다. - 
+3. `if` 필드의 조건에 상태 검사 함수 `failure()`를 `&&`연산자와 함께 작성해야 합니다. - [`c602ecd2`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/c602ecd258fabb4196e4ba107b5fa8a30681f968)
 
 - Process
   - 상태 검사 함수 `failure()`를 추가합니다.
@@ -58,3 +58,7 @@
 > `failure()` 상태 함수는 `true`를 반환하게 되지만
 > 그 이후의 `&& steps.run-tests.outcome == 'failure'`는 `false`가 되기 때문에
 > `Upload test report` Step은 실행되지 않습니다.
+
+- Result
+  - `test` Job의 테스트가 실패해도 테스트 레포트를 출력하는 Step `Upload test report`는 정상적으로 작동됩니다.
+  - 이후의 `build`, `deploy` Job은 이어서 진행되지 않습니다.
