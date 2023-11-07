@@ -103,7 +103,7 @@
 
 ### Commits
 
-1. 캐싱할 의존성 폴더의 경로를 변경하고, `if` 필드로 캐시 사용 여부를 추가합니다. - 
+1. 캐싱할 의존성 폴더의 경로를 변경하고, `if` 필드로 캐시 사용 여부를 추가합니다. - [`44fc5c31`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/44fc5c312344a28ac9e7f64200e9c5ffa865075c)
 
 - Process
   - `Cache dependencies` Step의 `path` 필드를 변경합니다.
