@@ -10,12 +10,17 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Cache dependencies
+        # 특정 Step을 식별하기 위해 id를 설정합니다.
         id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          # 패키지를 설치하게 되면, 자동으로 생성되는 node_modules를 캐싱할 경로로 지정합니다.
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        # id: cache Step의 outputs 값인 cache-hit가 'true'가 아니라면 해당 Step을 실행합니다.
+        # = 의존성을 설치하기 전, 캐시 파일을 사용한다면, 해당 Step을 실행하지 않습니다.
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Lint code
         run: npm run lint
@@ -25,13 +30,19 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Cache dependencies
+        # 특정 Step을 식별하기 위해 id를 설정합니다.
         id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          # 패키지를 설치하게 되면, 자동으로 생성되는 node_modules를 캐싱할 경로로 지정합니다.
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        # id: cache Step의 outputs 값인 cache-hit가 'true'가 아니라면 해당 Step을 실행합니다.
+        # = 의존성을 설치하기 전, 캐시 파일을 사용한다면, 해당 Step을 실행하지 않습니다.
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
+
       - name: Test code
         id: run-tests
         run: npm run test
@@ -48,12 +59,17 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Cache dependencies
+        # 특정 Step을 식별하기 위해 id를 설정합니다.
         id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          # 패키지를 설치하게 되면, 자동으로 생성되는 node_modules를 캐싱할 경로로 지정합니다.
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        # id: cache Step의 outputs 값인 cache-hit가 'true'가 아니라면 해당 Step을 실행합니다.
+        # = 의존성을 설치하기 전, 캐시 파일을 사용한다면, 해당 Step을 실행하지 않습니다.
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build website
         id: build-website
@@ -76,9 +92,6 @@ jobs:
       - name: Deploy
         run: echo "Deploying..."
   report:
-    # Job 레벨에서 실패를 감지할 수 있도록 needs 필드를 통해 의존 관계를 지정합니다.
-    # test Job의 끝은 결국 deploy이므로, deploy Job 하나만 지정하더라도
-    # 그 의존관계에 있는 Job 중 하나라도 실패하면 report가 감지하게 됩니다. 
     needs: [lint, deploy]
     if: failure()
     runs-on: ubuntu-latest
@@ -86,4 +99,4 @@ jobs:
       - name: Output information
         run: |
           echo "Something when wrong"
-          echo "${{ github }}"
+          echo "${{ toJSON(github) }}"

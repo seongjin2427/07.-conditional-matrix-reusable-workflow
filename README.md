@@ -8,11 +8,11 @@
 
 <br>
 
-## Control conditional Workflows
+## Control conditional Workflows 1
 
 `if`
 > `test` 통과 ➡️ 테스트 레포트 출력 X
->
+
 > `test` 실패 ➡️ 테스트 레포트 출력 O
 
 
@@ -91,3 +91,27 @@
   - `test` Job이 실패해도 테스트 레포트는 아티팩트로 업로드 됩니다.
   - `deploy`, `deploy`는 skip 됩니다.
   - `test`가 실패했기 때문에 `report` Job이 동작합니다.
+
+<br>
+
+## Control conditional Workflows 2
+
+`if`
+> `actions/cache`를 사용한 캐시를 사용한다면 ➡️ 의존성 설치 X
+
+> `actions/cache`를 사용한 캐시를 사용하지 않았다면 ➡️ 의존성 설치 O
+
+### Commits
+
+1. 캐싱할 의존성 폴더의 경로를 변경하고, `if` 필드로 캐시 사용 여부를 추가합니다. - 
+
+- Process
+  - `Cache dependencies` Step의 `path` 필드를 변경합니다.
+    - `~/.npm` ➡️ `node_modules`
+  - `if` 필드를 추가합니다.
+    - `if: steps.cache.outputs.cache-hit != 'true'`
+    - 참고 (`cache-hit` outputs)
+      - [actions/cache](https://github.com/actions/cache#outputs)
+
+- Result
+  - `test` Job에서는 설치되었던 의존성이 `build` Job에서는 캐시가 사용되어 `Install dependencies` Step이 skip 됩니다.
