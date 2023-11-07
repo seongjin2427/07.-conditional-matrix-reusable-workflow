@@ -80,9 +80,14 @@
 
 <br>
 
-5. Job 레벨에서의 실패를 서로 감지 할 수 있도록 의존 관계를 추가합니다. - 
+5. Job 레벨에서의 실패를 서로 감지 할 수 있도록 의존 관계를 추가합니다. - [`bef4c911`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/bef4c911ba2c7f7d8d9ddaeee5d891b3097a41c5)
 
 - Process
   - `report` Job에 `needs: [lint, deploy]` 필드를 추가합니다.
   - `lint` Job의 실패를 감지합니다.
   - `test` Job과 연결된 마지막 Job은 결국 `deploy`이기 때문에, `deploy` Job을 의존관계로 두면, `test`, `build`, `deploy` Job들 중 하나라도 실패하게 되면 감지하게 됩니다.
+
+- Result
+  - `test` Job이 실패해도 테스트 레포트는 아티팩트로 업로드 됩니다.
+  - `deploy`, `deploy`는 skip 됩니다.
+  - `test`가 실패했기 때문에 `report` Job이 동작합니다.
