@@ -65,9 +65,24 @@
 
 <br>
 
-4. Job 레벨에서도 `if` 필드를 활용할 수 있습니다. - 
+4. Job 레벨에서도 `if` 필드를 활용할 수 있습니다. - [efd94e02](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/efd94e025f90a6b0a64e20505602f4cd371807ea)
 
 - Proceess
   - `execution-flow.yml` 파일의 마지막에 `report` Job을 추가합니다.
   - `Output information` Step을 작성하고, `if` 필드로 `failure()` 상태함수를 추가합니다.
     - `if: failure()`
+
+- Result
+  - `report` Job은 `test` Job의 실패를 감지하지 못하고 그냥 `skip` 됩니다.
+
+> `test`와는 별개로 `report`가 병렬적으로 진행되기 때문에
+> 두 Job 사이의 의존관계가 존재하지 않아 `test`가 실패해도 `report`가 감지하지 못합니다.
+
+<br>
+
+5. Job 레벨에서의 실패를 서로 감지 할 수 있도록 의존 관계를 추가합니다. - 
+
+- Process
+  - `report` Job에 `needs: [lint, deploy]` 필드를 추가합니다.
+  - `lint` Job의 실패를 감지합니다.
+  - `test` Job과 연결된 마지막 Job은 결국 `deploy`이기 때문에, `deploy` Job을 의존관계로 두면, `test`, `build`, `deploy` Job들 중 하나라도 실패하게 되면 감지하게 됩니다.
