@@ -115,3 +115,16 @@
 
 - Result
   - `test` Job에서는 설치되었던 의존성이 `build` Job에서는 캐시가 사용되어 `Install dependencies` Step이 skip 됩니다.
+
+<br>
+
+## `continue-on-error`필드와 `if`필드의 차이점
+
+### Commits
+
+1. 기존의 `execution-flow.yml` 파일을 복사하여 `continue.yml` 파일을 만듭니다.
+
+- Proccess
+  - 'MainContent.test.jsx' line 22의 'help-area'를 'help-are'로 변경하여 에러를 발생시킵니다.
+  - `test` Job의 'Upload test report' Step `if`필드를 제거합니다.
+  - 'Test code' Step에 `continue-on-error` 필드를 `true`로 지정합니다.
