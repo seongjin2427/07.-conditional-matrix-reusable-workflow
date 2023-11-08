@@ -283,3 +283,6 @@
     - `      run: echo ${{ needs.deploy.outputs.result }}` - `needs` 컨텍스트를 통해 `deploy`가 실행되고 난 뒤의 결과물을 `outputs.result`를 통해 출력합니다.
   - `report`
     - `  ...`
+
+- Result
+  - `deploy` Job의 재사용 워크플로우를 실행한 결과를 `success`로 맞게 출력합니다.
