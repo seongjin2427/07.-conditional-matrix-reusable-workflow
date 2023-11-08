@@ -138,7 +138,7 @@
 
 > `matrix`는 지정한 키에 대한 값들이 배열이라면, 배열의 요소들에 대한 모든 경우의 수에 대해 Job을 병렬적으로 실행합니다.
 
-1. `matrix.yml`을 생성하여 워크플로우를 정의하고 실행해봅니다. - 
+1. `matrix.yml`을 생성하여 워크플로우를 정의하고 실행해봅니다. - [`6d870584`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/6d8705844dcc45c3ffed2620800a58d167b7dc99)
 
 - Process
   - `build` Job 하위에 `strategy` 필드를 지정하고, `matrix`를 지정합니다.
@@ -149,3 +149,5 @@
     - `runs-on: ${{ matrix.operating-system }}`
     - `node-version: ${{ matrix-node-version }}`
 
+- Result
+  - `matrix`에 지정한 6가지 경우의 수에 대해서 Job이 병렬적으로 실행됩니다.
