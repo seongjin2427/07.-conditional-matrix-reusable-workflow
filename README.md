@@ -233,14 +233,15 @@
 
 <br>
 
-3. 재사용 워크플로우에서도 `secrets`을 사용할 수 있습니다. 이번 예제에서는 주석으로만 알아봅니다.
+3. 재사용 워크플로우에서도 `secrets`을 사용할 수 있습니다. 이번 예제에서는 주석으로만 알아봅니다. - [`1e54a4dc`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/1e54a4dc5f0df3265007be8f88a5794e3e82e53a)
 
 - Process
   - `reusable.yml`
     - `inputs:`
       - `...`
     - `secrets:` - `inputs`와 동일한 수준에서 지정해야 합니다.
-    - `  required: true` - `secrets`가 필수인지를 나타냅니다.
+    - `  some-secret:`
+    - `    required: true` - `secrets`가 필수인지를 나타냅니다.
   - `use-reuse.yml`
     - `deploy` Job
       - `...`
