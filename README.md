@@ -261,18 +261,26 @@
 
 - Process
   - `reusable.yml`
-    - `inputs:`
-      - `...`
-    - `secrets:` - `inputs`와 동일한 수준에서 지정해야 합니다.
-    - `  some-secret:`
-    - `    required: true` - `secrets`가 필수인지를 나타냅니다.
+    - ```yml
+      inputs:
+        ...
+      # inputs과 동일한 수준에서 지정해야 합니다.
+      secrets: 
+        # 원하는 키를 지정할 수 있습니다.
+        some-secret:
+          # secrets이 필수 인지를 나타냅니다.
+          required: true 
   - `use-reuse.yml`
-    - `deploy` Job
-      - `...`
-      - `with:`
-      - `  ...`
-      - `secrets:` - `with`와 동일한 수준에서 지정해야 합니다.
-      - `  some-secret: ${{ secrets.some-secret }}` - 재사용 워크플로우에서 지정한 키를 통해 할당해야 합니다.
+    - ```yml
+      jobs:
+        deploy:
+          ...
+          with:
+            ...
+          # with와 동일한 수준에서 지정해야 합니다.
+          secrets: 
+            # 재사용 워크플로우에서 지정한 키를 통해 할당해야 합니다.
+            some-secret: ${{ secrets.some-secret }} 
 
 <br>
 
@@ -290,7 +298,7 @@
           result: 
           # result가 반환할 데이터에 대해서 설명합니다.
           description: The result of the deployment operation 
-          # Job에서 outputs의 값으로 지정한 (여기서는 `outcome`) 값을 재사용 워크플로우에서 반환할 데이터로 할당합니다.
+          # Job에서 outputs의 값으로 지정한 (여기서는 outcome) 값을 재사용 워크플로우에서 반환할 데이터로 할당합니다.
           value: ${{ jobs.deploy.outputs.outcome }} 
       jobs:
         deploy:
