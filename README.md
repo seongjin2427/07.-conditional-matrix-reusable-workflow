@@ -189,7 +189,7 @@
 > 동일한 워크플로우에서 Job 하나 추가되었다고 모든 워크플로우를 새로 만들 필요가 없습니다.
 > 재사용가능한 워크플로우를 정의하여 필요한 부분만큼 재사용할 수 있습니다.
 
-1. 재사용할 워크플로우(`reusable.yml`)를 정의하고, `execution-flow.yml`을 복사한 파일을 `use-reuse.yml`로 이름을 변경하고, 다른 워크플로우를 호출해봅니다. - 
+1. 재사용할 워크플로우(`reusable.yml`)를 정의하고, `execution-flow.yml`을 복사한 파일을 `use-reuse.yml`로 이름을 변경하고, 다른 워크플로우를 호출해봅니다. - [`b077a2a9`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/b077a2a9f65c132c60fe5ce6cad32aa3ea6cbe1c)
 
 - Process
   - `use-reuse.yml` - `deploy` Job
@@ -198,3 +198,6 @@
     - `uses: ./.github/workflows/reusable.yml` 추가
       - `uses: [호출할 워크플로우의 경로]`를 통해 재사용 워크플로우를 사용할 수 있습니다.
   - `src/components/MainContent.test.jsx` line 22의 'help-are'를 'help-area'로 변경하여 에러를 수정합니다.
+
+- Result
+  - `use-reuse.yml` 파일의 `deploy` Job이 지정한 경로의 `reusable.yml` 파일에서 정의한 워크플로우를 실행하여 작동한 것을 확인할 수 있습니다.
