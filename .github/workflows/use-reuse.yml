@@ -72,9 +72,18 @@ jobs:
     uses: ./.github/workflows/reusable.yml
     with:
       artifact-name: dist-files
-    # with와 동일한 수준에서 secrets을 지정합니다.
-    # secrets:
-    #   some-secret: ${{ secrets.some-secret }}
+  # deploy Job에서 사용한 재사용 워크플로우의 결과 값을 출력해봅니다.
+  print-deploy-result:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print deploy output
+        # print-deploy-result Job이 의존하는 deploy Job을 참조하기 위해서 needs 컨텍스트를 사용합니다.
+        # deploy: deploy Job을 실행하고 난 뒤
+        # outputs: 그 결과물 (재사용 워크플로우에서 반환한 outputs 값)들 중
+        # result: result를 키로 하는 반환 값(sccess)을 참조하여
+        # 출력합니다.
+        run: echo ${{ needs.deploy.outputs.result }}
   report:
     needs: [lint, deploy]
     if: failure()

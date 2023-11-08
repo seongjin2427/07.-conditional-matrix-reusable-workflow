@@ -249,3 +249,37 @@
       - `  ...`
       - `secrets:` - `with`와 동일한 수준에서 지정해야 합니다.
       - `  some-secret: ${{ secrets.some-secret }}` - 재사용 워크플로우에서 지정한 키를 통해 할당해야 합니다.
+
+<br>
+
+4. `outputs`을 통해 재사용 워크플로우를 실행하고 난 뒤의 결과물을 반환할 수 있습니다.
+
+- Process
+  - `reusable.yml`
+    - `  inputs:`
+    - `  ...`
+    - `  outputs:` - `inputs` 필드와 동일한 레벨에 지정합니다.
+    - `    result:` - 재사용 워크플로우를 실행한 결과물을 저장할 키를 원하는대로 지정합니다.
+    - `      description: The result of the deployment operation` - `result`가 반환할 데이터에 대해서 설명합니다.
+    - `      value: ${{ jobs.deploy.outputs.outcome }}` - Job에서 outputs의 값으로 지정한 (여기서는 `outcome`) 값을 재사용 워크플로우에서 반환할 데이터로 할당합니다.
+    - `jobs:`
+    - `  deploy:`
+    - `    outputs:` - `deploy`에서 반환할 값을 지정합니다.
+    - `      outcome: ${{ steps.set-result.outputs.step-result }}` - `steps` 컨텍스트를 통해 참조한 반환할 데이터를 `outcome` 키에 할당합니다.
+    - `    ...`
+    - `    steps:`
+    - `      ...`
+    - `      - name: Set result output` - 재사용 워크플로우의 결과물로 반환할 데이터를 실제로 result 변수에 담기 위한 Step입니다.
+    - `        id: set-result` - `Set result output` Step의 id를 `set-result`로 지정합니다.
+    - `        run: echo "step-result=success" >> $GITHUB_OUTPUT` - `step-result`에 `success`라는 값을 저장합니다.
+  - `use-reuse.yml`
+    - `deploy` Job
+    - `  ...`
+    - `print-deploy-result` - `deploy` Job 다음으로 새로운 Job을 만듭니다.
+    - `  needs: deploy` - `deploy` Job이 실행되고 난 뒤의 결과물을 출력해야 하므로, 의존관계를 생성합니다.
+    - `  runs-on: ubuntu-latest`
+    - `  steps:`
+    - `    - name: Print deploy output`
+    - `      run: echo ${{ needs.deploy.outputs.result }}` - `needs` 컨텍스트를 통해 `deploy`가 실행되고 난 뒤의 결과물을 `outputs.result`를 통해 출력합니다.
+  - `report`
+    - `  ...`
