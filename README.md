@@ -165,7 +165,7 @@
 
 <br>
 
-3. 특정 조합을 포함하기 위한 `include`와 특정 조합을 제외시키기 위한 `exclude`를 사용해 봅니다. - 
+3. 특정 조합을 포함하기 위한 `include`와 특정 조합을 제외시키기 위한 `exclude`를 사용해 봅니다. - [`6677bb43`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/6677bb43244806f017836d853c659e7de77f7911)
 
 - Process
   - `matrix` 필드에서 `include`를 지정하고 그 하위에 포함시킬 조합을 지정합니다.
@@ -178,3 +178,7 @@
     - `exclude`
     - `  - node-version: 12`
     - `  - operating-system: windows-latest`
+
+- Result
+  - `node-version: 12`와 `operating-system: windows-latest`의 조합을 제외하고 실행됩니다.
+  - `node-version: 18`과 `operating-system: ubuntu-latest` 조합이 포함되어 실행됩니다.
