@@ -1,0 +1,25 @@
+name: Matrix Demo
+on: push
+jobs:
+  build:
+    # maxrix를 사용하기 위해 strategy 지정
+    strategy:
+      matrix:
+        # 사용자가 원하는 대로 키를 지정할 수 있습니다.
+        # matrix에서 지정한 Array 요소들을 각각 병렬적으로 워크플로우를 실행합니다.
+        node-version: [12, 14, 16]
+        operating-system: [ubuntu-latest, windows-latest]
+    # strategy에서 지정한 matrix 객체로부터 operating-system을 가져와 사용합니다.
+    runs-on: ${{ matrix.operating-system }}
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          # strategy에서 지정한 matrix 객체로부터 node-version을 가져와 사용합니다.
+          node-version: ${{ matrix.node-version }}
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build project
+        run: npm run build

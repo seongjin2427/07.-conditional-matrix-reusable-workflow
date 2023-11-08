@@ -125,10 +125,27 @@
 1. 기존의 `execution-flow.yml` 파일을 복사하여 `continue.yml` 파일을 만듭니다. - [`0f7f3119`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/0f7f31192eee4de8ada42bfc9b1bc2782d2766e8)
 
 - Proccess
-  - 'MainContent.test.jsx' line 22의 'help-area'를 'help-are'로 변경하여 에러를 발생시킵니다.
+  - `MainContent.test.jsx` line 22의 'help-area'를 'help-are'로 변경하여 에러를 발생시킵니다.
   - `test` Job의 'Upload test report' Step `if`필드를 제거합니다.
   - 'Test code' Step에 `continue-on-error` 필드를 `true`로 지정합니다.
 
 - Result
   - `if` 필드를 지정된 워크플로우는 에러가 발생한 이후의 Job들은 skip합니다.
   - `continue-on-error` 필드를 지정한 워크플로우는 이후의 Job들을 그대로 동작시킵니다.
+
+---
+## Matrix
+
+> `matrix`는 지정한 키에 대한 값들이 배열이라면, 배열의 요소들에 대한 모든 경우의 수에 대해 Job을 병렬적으로 실행합니다.
+
+1. `matrix.yml`을 생성하여 워크플로우를 정의하고 실행해봅니다. - 
+
+- Process
+  - `build` Job 하위에 `strategy` 필드를 지정하고, `matrix`를 지정합니다.
+  - `matrix` 하위에 원하는 키를 지정하고, 그에 대한 값을 배열로 지정합니다.
+    - `operating-system: [ubuntu-latest, window-latest]`
+    - `node-version: [12, 14, 16]`
+  - 동적으로 실행할 Step에 `${{ }}` 구문을 통해 해당 `matrix` 및 키를 입력합니다.
+    - `runs-on: ${{ matrix.operating-system }}`
+    - `node-version: ${{ matrix-node-version }}`
+
