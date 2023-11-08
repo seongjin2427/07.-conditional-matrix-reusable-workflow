@@ -204,7 +204,7 @@
 
 <br>
 
-2. 재사용할 워크플로우의 `on` 트리거를 변경하고 필요한 값을 받을 수 있도록 `inputs`를 지정하고 관련 속성을 정의합니다. - 
+2. 재사용할 워크플로우의 `on` 트리거를 변경하고 필요한 값을 받을 수 있도록 `inputs`를 지정하고 관련 속성을 정의합니다. - [`5f5510b4`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/5f5510b434984e0c08ab0e7768aeb16145ea8946)
 
 - Process
   - `reusable.yml`
@@ -227,3 +227,6 @@
       - `uses: ./.github/workflows/reusable.yml`
       - `with:`
       - `  artifact-name: dist-files` - 재사용 워크플로우에서 지정한 `inputs` 키 값의 데이터를 할당합니다.
+
+- Result
+  - 재사용 워크플로우 `reusable.yml`에서 정상적으로 아티팩트를 다운로드하고, 다운로드한 파일을 출력하는 것을 확인할 수 있습니다.
