@@ -230,3 +230,21 @@
 
 - Result
   - 재사용 워크플로우 `reusable.yml`에서 정상적으로 아티팩트를 다운로드하고, 다운로드한 파일을 출력하는 것을 확인할 수 있습니다.
+
+<br>
+
+3. 재사용 워크플로우에서도 `secrets`을 사용할 수 있습니다. 이번 예제에서는 주석으로만 알아봅니다.
+
+- Process
+  - `reusable.yml`
+    - `inputs:`
+      - `...`
+    - `secrets:` - `inputs`와 동일한 수준에서 지정해야 합니다.
+    - `  required: true` - `secrets`가 필수인지를 나타냅니다.
+  - `use-reuse.yml`
+    - `deploy` Job
+      - `...`
+      - `with:`
+      - `  ...`
+      - `secrets:` - `with`와 동일한 수준에서 지정해야 합니다.
+      - `  some-secret: ${{ secrets.some-secret }}` - 재사용 워크플로우에서 지정한 키를 통해 할당해야 합니다.
