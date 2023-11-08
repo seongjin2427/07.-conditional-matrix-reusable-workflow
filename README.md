@@ -182,3 +182,19 @@
 - Result
   - `node-version: 12`와 `operating-system: windows-latest`의 조합을 제외하고 실행됩니다.
   - `node-version: 18`과 `operating-system: ubuntu-latest` 조합이 포함되어 실행됩니다.
+
+---
+## Reusable Workflow
+
+> 동일한 워크플로우에서 Job 하나 추가되었다고 모든 워크플로우를 새로 만들 필요가 없습니다.
+> 재사용가능한 워크플로우를 정의하여 필요한 부분만큼 재사용할 수 있습니다.
+
+1. 재사용할 워크플로우(`reusable.yml`)를 정의하고, `execution-flow.yml`을 복사한 파일을 `use-reuse.yml`로 이름을 변경하고, 다른 워크플로우를 호출해봅니다. - 
+
+- Process
+  - `use-reuse.yml` - `deploy` Job
+    - `runs-on: ubuntu-latest` 제거
+    - `steps` 필드 제거
+    - `uses: ./.github/workflows/reusable.yml` 추가
+      - `uses: [호출할 워크플로우의 경로]`를 통해 재사용 워크플로우를 사용할 수 있습니다.
+  - `src/components/MainContent.test.jsx` line 22의 'help-are'를 'help-area'로 변경하여 에러를 수정합니다.
