@@ -151,10 +151,14 @@
 
 - Result
   - `matrix`에 지정한 6가지 경우의 수에 대해서 Job이 병렬적으로 실행됩니다.
+  - 특정 node-version에서 에러가 발생하여 나머지 Job들이 skip 됩니다.
 
 <br>
 
-2. Job들 중 하나라도 에러가 발생하면, 나머지는 skip되기 때문에 `continue-on-error`를 지정해줍니다. - 
+2. Job들 중 하나라도 에러가 발생하면, 나머지는 skip되기 때문에 `continue-on-error`를 지정해줍니다. - [`bf18d4cc`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/bf18d4cc227a7e3bbfa9028f898d9135cb2bdf80)
 
 - Process
   - `build` Job 레벨에서 `continue-on-error`를 `true`로 지정해줍니다.
+
+- Result
+  - Job들 중에서 에러가 발생하더라도, 그와 관계없이 각각의 Job들이 병렬적으로 실행됩니다.
