@@ -201,3 +201,29 @@
 
 - Result
   - `use-reuse.yml` 파일의 `deploy` Job이 지정한 경로의 `reusable.yml` 파일에서 정의한 워크플로우를 실행하여 작동한 것을 확인할 수 있습니다.
+
+<br>
+
+2. 재사용할 워크플로우의 `on` 트리거를 변경하고 필요한 값을 받을 수 있도록 `inputs`를 지정하고 관련 속성을 정의합니다. - 
+
+- Process
+  - `reusable.yml`
+    - `on`
+    - `  workflow_call`
+    - `    inputs:`
+    - `      artifact-name:` - 재사용 워크플로우에서 사용할 값의 키를 지정합니다.
+    - `        description:` - 지정한 키에 어떠한 값을 받아야 하는지 설명합니다.
+    - `        required:` - 해당 값이 필수인지를 나타냅니다.
+    - `        default: dist` - 필수가 아닐 때의 기본 값을 지정할 수 있습니다.
+    - `        type: string` - 받을 데이터의 타입을 지정합니다. (`string` | `number` | `boolean`)
+    - `jobs`
+    - `...`
+    - `with:`
+    -   `name: ${{ inputs.artifact-name }}` - `inputs` 컨텍스트로부터 지정한 input 값을 가져와 사용합니다.
+      - 참고: [`input` 컨텍스트](https://docs.github.com/en/actions/learn-github-actions/contexts#inputs-context)
+  - `use-reuse.yml`
+    - `deploy` Job
+      - `...``
+      - `uses: ./.github/workflows/reusable.yml`
+      - `with:`
+      - `  artifact-name: dist-files` - 재사용 워크플로우에서 지정한 `inputs` 키 값의 데이터를 할당합니다.
