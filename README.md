@@ -169,15 +169,19 @@
 
 - Process
   - `matrix` 필드에서 `include`를 지정하고 그 하위에 포함시킬 조합을 지정합니다.
-    - `include:`
-    - `  - node-version: 18`
-    - `  - operating-system: ubuntu-latest``
+    - ```yml
+      include:
+        - node-version: 18
+        - operating-system: ubuntu-latest
     - 기존에 지정하지 않은 키를 사용해도 됩니다.
       - `npm: npm`
   - `matrix` 필드에서 `exclude`를 지정하고, 그 하위에 제외시킬 조합을 지정합니다.
-    - `exclude`
-    - `  - node-version: 12`
-    - `  - operating-system: windows-latest`
+    - ```yml
+      exclude:
+        - node-version: 12
+        - operating-system: windows-latest
+
+<br>
 
 - Result
   - `node-version: 12`와 `operating-system: windows-latest`의 조합을 제외하고 실행됩니다.
@@ -192,12 +196,18 @@
 1. 재사용할 워크플로우(`reusable.yml`)를 정의하고, `execution-flow.yml`을 복사한 파일을 `use-reuse.yml`로 이름을 변경하고, 다른 워크플로우를 호출해봅니다. - [`b077a2a9`](https://github.com/seongjin2427/07.-conditional-matrix-reusable-workflow/commit/b077a2a9f65c132c60fe5ce6cad32aa3ea6cbe1c)
 
 - Process
-  - `use-reuse.yml` - `deploy` Job
-    - `runs-on: ubuntu-latest` 제거
-    - `steps` 필드 제거
-    - `uses: ./.github/workflows/reusable.yml` 추가
-      - `uses: [호출할 워크플로우의 경로]`를 통해 재사용 워크플로우를 사용할 수 있습니다.
+  - `use-reuse.yml`
+  - ```yml
+    jobs:
+      deploy:
+      # runs-on: ubuntu-latest` 제거
+      # steps 필드 제거
+      # 재사용 워크플로우 경로 추가
+      # 'uses: [호출할 워크플로우의 경로]'를 통해 재사용 워크플로우를 사용할 수 있습니다.
+      uses: ./.github/workflows/reusable.yml
   - `src/components/MainContent.test.jsx` line 22의 'help-are'를 'help-area'로 변경하여 에러를 수정합니다.
+
+<br>
 
 - Result
   - `use-reuse.yml` 파일의 `deploy` Job이 지정한 경로의 `reusable.yml` 파일에서 정의한 워크플로우를 실행하여 작동한 것을 확인할 수 있습니다.
@@ -208,25 +218,39 @@
 
 - Process
   - `reusable.yml`
-    - `on`
-    - `  workflow_call`
-    - `    inputs:`
-    - `      artifact-name:` - 재사용 워크플로우에서 사용할 값의 키를 지정합니다.
-    - `        description:` - 지정한 키에 어떠한 값을 받아야 하는지 설명합니다.
-    - `        required:` - 해당 값이 필수인지를 나타냅니다.
-    - `        default: dist` - 필수가 아닐 때의 기본 값을 지정할 수 있습니다.
-    - `        type: string` - 받을 데이터의 타입을 지정합니다. (`string` | `number` | `boolean`)
-    - `jobs`
-    - `...`
-    - `with:`
-    -   `name: ${{ inputs.artifact-name }}` - `inputs` 컨텍스트로부터 지정한 input 값을 가져와 사용합니다.
-      - 참고: [`input` 컨텍스트](https://docs.github.com/en/actions/learn-github-actions/contexts#inputs-context)
+    - ```yml
+      on:
+        workflow_call:
+          inputs:
+            # 재사용 워크플로우에서 사용할 값의 키를 지정합니다.
+            artifact-name: 
+              # 지정한 키에 어떠한 값을 받아야 하는지 설명합니다.
+              description: 
+              # 해당 값이 필수인지를 나타냅니다.
+              required: false
+              # 필수가 아닐 때의 기본 값을 지정할 수 있습니다.
+              default: dist
+              # 받을 데이터의 타입을 지정합니다. (string | number | boolean) 
+              type: string 
+      jobs:
+        ...
+        with:
+          # inputs 컨텍스트로부터 지정한 input 값을 가져와 사용합니다.
+          name: ${{ inputs.artifact-name }} 
+    - 참고: [`input` 컨텍스트](https://docs.github.com/en/actions/learn-github-actions/contexts#inputs-context)
+
+<br>
+
   - `use-reuse.yml`
-    - `deploy` Job
-      - `...``
-      - `uses: ./.github/workflows/reusable.yml`
-      - `with:`
-      - `  artifact-name: dist-files` - 재사용 워크플로우에서 지정한 `inputs` 키 값의 데이터를 할당합니다.
+    - ```yml
+      ...
+      jobs:
+        deploy:
+          ...
+          uses: ./.github/workflows/reusable.yml
+          with:
+            # 재사용 워크플로우에서 지정한 inputs 키 값의 데이터를 할당합니다.
+            artifact-name: dist-files 
 
 - Result
   - 재사용 워크플로우 `reusable.yml`에서 정상적으로 아티팩트를 다운로드하고, 다운로드한 파일을 출력하는 것을 확인할 수 있습니다.
@@ -256,31 +280,49 @@
 
 - Process
   - `reusable.yml`
-    - `  inputs:`
-    - `  ...`
-    - `  outputs:` - `inputs` 필드와 동일한 레벨에 지정합니다.
-    - `    result:` - 재사용 워크플로우를 실행한 결과물을 저장할 키를 원하는대로 지정합니다.
-    - `      description: The result of the deployment operation` - `result`가 반환할 데이터에 대해서 설명합니다.
-    - `      value: ${{ jobs.deploy.outputs.outcome }}` - Job에서 outputs의 값으로 지정한 (여기서는 `outcome`) 값을 재사용 워크플로우에서 반환할 데이터로 할당합니다.
-    - `jobs:`
-    - `  deploy:`
-    - `    outputs:` - `deploy`에서 반환할 값을 지정합니다.
-    - `      outcome: ${{ steps.set-result.outputs.step-result }}` - `steps` 컨텍스트를 통해 참조한 반환할 데이터를 `outcome` 키에 할당합니다.
-    - `    ...`
-    - `    steps:`
-    - `      ...`
-    - `      - name: Set result output` - 재사용 워크플로우의 결과물로 반환할 데이터를 실제로 result 변수에 담기 위한 Step입니다.
-    - `        id: set-result` - `Set result output` Step의 id를 `set-result`로 지정합니다.
-    - `        run: echo "step-result=success" >> $GITHUB_OUTPUT` - `step-result`에 `success`라는 값을 저장합니다.
+    - ```yml
+      ...
+        inputs:
+          ...
+        # inputs 필드와 동일한 레벨에 outputs을 지정합니다.
+        outputs: 
+          # 재사용 워크플로우를 실행한 결과물을 저장할 키를 원하는대로 지정합니다.
+          result: 
+          # result가 반환할 데이터에 대해서 설명합니다.
+          description: The result of the deployment operation 
+          # Job에서 outputs의 값으로 지정한 (여기서는 `outcome`) 값을 재사용 워크플로우에서 반환할 데이터로 할당합니다.
+          value: ${{ jobs.deploy.outputs.outcome }} 
+      jobs:
+        deploy:
+          # deploy에서 반환할 값을 지정합니다.
+          outputs: 
+            # steps 컨텍스트를 통해 참조한 반환할 데이터를 outcome 키에 할당합니다.
+            outcome: ${{ steps.set-result.outputs.step-result }} 
+          ...
+          steps:
+            ...
+            # 재사용 워크플로우의 결과물로 반환할 데이터를 실제로 result 변수에 담기 위한 Step입니다.
+            - name: Set result output 
+              # 'Set result output' Step의 id를 set-result로 지정합니다.
+              id: set-result 
+              # step-result에 'success'라는 값을 저장합니다.
+              run: echo "step-result=success" >> $GITHUB_OUTPUT 
+
   - `use-reuse.yml`
-    - `deploy` Job
-    - `  ...`
-    - `print-deploy-result` - `deploy` Job 다음으로 새로운 Job을 만듭니다.
-    - `  needs: deploy` - `deploy` Job이 실행되고 난 뒤의 결과물을 출력해야 하므로, 의존관계를 생성합니다.
-    - `  runs-on: ubuntu-latest`
-    - `  steps:`
-    - `    - name: Print deploy output`
-    - `      run: echo ${{ needs.deploy.outputs.result }}` - `needs` 컨텍스트를 통해 `deploy`가 실행되고 난 뒤의 결과물을 `outputs.result`를 통해 출력합니다.
+    - ```yml
+      ...
+      jobs:
+        deploy:
+          ...
+        # deploy Job 다음으로 새로운 Job을 만듭니다.
+        print-deploy-result: 
+          # deploy Job이 실행되고 난 뒤의 결과물을 출력해야 하므로, 의존관계를 생성합니다.
+          needs: deploy 
+          runs-on: ubuntu-latest
+          steps:
+            - name: Print deploy output
+              # needs 컨텍스트를 통해 deploy가 실행되고 난 뒤의 결과물을 outputs.result를 통해 출력합니다.
+              run: echo ${{ needs.deploy.outputs.result }} 
   - `report`
     - `  ...`
 
