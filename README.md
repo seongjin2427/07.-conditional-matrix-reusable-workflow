@@ -151,3 +151,10 @@
 
 - Result
   - `matrix`에 지정한 6가지 경우의 수에 대해서 Job이 병렬적으로 실행됩니다.
+
+<br>
+
+2. Job들 중 하나라도 에러가 발생하면, 나머지는 skip되기 때문에 `continue-on-error`를 지정해줍니다. - 
+
+- Process
+  - `build` Job 레벨에서 `continue-on-error`를 `true`로 지정해줍니다.
