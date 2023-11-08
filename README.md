@@ -162,3 +162,19 @@
 
 - Result
   - Job들 중에서 에러가 발생하더라도, 그와 관계없이 각각의 Job들이 병렬적으로 실행됩니다.
+
+<br>
+
+3. 특정 조합을 포함하기 위한 `include`와 특정 조합을 제외시키기 위한 `exclude`를 사용해 봅니다. - 
+
+- Process
+  - `matrix` 필드에서 `include`를 지정하고 그 하위에 포함시킬 조합을 지정합니다.
+    - `include:`
+    - `  - node-version: 18`
+    - `  - operating-system: ubuntu-latest``
+    - 기존에 지정하지 않은 키를 사용해도 됩니다.
+      - `npm: npm`
+  - `matrix` 필드에서 `exclude`를 지정하고, 그 하위에 제외시킬 조합을 지정합니다.
+    - `exclude`
+    - `  - node-version: 12`
+    - `  - operating-system: windows-latest`
